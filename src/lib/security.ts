@@ -7,17 +7,15 @@ import { createHash, randomBytes } from 'crypto';
  * Returns a 403 NextResponse if the origin is invalid, or null if OK.
  */
 export function checkCSRF(req: NextRequest): NextResponse | null {
-  // Allow server-side calls (no origin header) — e.g. cron jobs
   const origin = req.headers.get('origin');
   if (!origin) return null;
 
   const allowed = process.env.NEXT_PUBLIC_SITE_URL ?? '';
-
-  // In development, also allow localhost
   const isDev = process.env.NODE_ENV === 'development';
   const isLocalhost = origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1');
+  const isVercelPreview = origin.endsWith('.vercel.app');
 
-  if (origin !== allowed && !(isDev && isLocalhost)) {
+  if (origin !== allowed && !(isDev && isLocalhost) && !isVercelPreview) {
     return NextResponse.json(
       { success: false, error: 'Forbidden' },
       { status: 403 },
