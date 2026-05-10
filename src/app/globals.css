@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Brand CSS Variables */
+:root {
+  --brand-50:  #e8f5ee;
+  --brand-100: #c8e6d6;
+  --brand-200: #96ccb0;
+  --brand-400: #2E8B57;
+  --brand-500: #236B43;
+  --brand-600: #1a5233;
+  --brand-700: #123b25;
+  --brand-800: #0a2416;
+  --brand-900: #050f09;
+  --font-display: 'Playfair Display';
+  --font-body:    'DM Sans';
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  background: #0A0A0B;
+  color: #f0f0f0;
+}
+
+.font-display { font-family: var(--font-display), Georgia, serif; }
+
+.container-site {
+  @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.section-pad {
+  @apply py-20 md:py-28;
+}
+
+.green-text {
+  background: linear-gradient(135deg, #2E8B57 0%, #3DAA72 50%, #236B43 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.green-shimmer {
+  background: linear-gradient(90deg, #2E8B57 0%, #3DAA72 25%, #2E8B57 50%, #3DAA72 75%, #2E8B57 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200;
+  background: linear-gradient(135deg, #2E8B57, #236B43);
+  color: #ffffff;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(46, 139, 87, 0.35);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-outline {
+  @apply inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg font-semibold transition-all duration-200;
+  color: #2E8B57;
+  border: 1px solid #2E8B57;
+}
+.btn-outline:hover {
+  background: rgba(46, 139, 87, 0.1);
+}
+
+.card-dark {
+  @apply rounded-2xl border border-white/5 bg-dark-700;
+}
+
+/* Form inputs */
+.input-dark {
+  @apply w-full px-4 py-3 rounded-lg border text-white transition-colors;
+  background: #242429;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.input-dark::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+.input-dark:focus {
+  outline: none;
+  border-color: #2E8B57;
+  box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.2);
+}
+
+.section-divider {
+  @apply border-t border-white/5;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position:  200% center; }
+}
+
+.animate-fade-up { animation: fadeUp 0.6s ease forwards; }
+.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
