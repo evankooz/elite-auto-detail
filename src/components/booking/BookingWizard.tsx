@@ -344,6 +344,7 @@ function SuccessScreen({ bookingId }: { bookingId: string }) {
         Ref: <span className="text-brand-400 font-mono font-bold">{bookingId.slice(0, 8).toUpperCase()}</span>
       </p>
       <p className="text-white/40 text-sm mb-8">
+        We'll send you a confirmation email within a few minutes.
         We'll send you a reminder 24 hours before your appointment.
       </p>
       <div className="flex flex-wrap gap-3 justify-center">
