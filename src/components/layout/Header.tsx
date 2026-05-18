@@ -25,7 +25,7 @@ export default function Header() {
       <div className="container-site flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex flex-col leading-tight">
-          <span className="font-display text-xl font-bold gold-text">
+          <span className="font-display text-xl font-bold green-text">
             {clientConfig.businessName.split('&')[0].trim()}
           </span>
           <span className="font-display text-sm text-white/60 -mt-0.5">

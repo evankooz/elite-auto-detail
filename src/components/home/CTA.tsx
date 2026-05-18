@@ -15,7 +15,7 @@ export default function CTA() {
             </p>
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5 max-w-2xl mx-auto">
               Your{' '}
-              <span className="gold-shimmer">Best-Looking</span>
+              <span className="green-shimmer">Best-Looking</span>
               {' '}Vehicle is One Click Away
             </h2>
             <p className="text-white/50 text-lg max-w-xl mx-auto mb-10">

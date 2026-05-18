@@ -8,7 +8,7 @@ export default function Testimonials() {
         <div className="text-center mb-14">
           <p className="text-brand-400 text-sm font-semibold uppercase tracking-widest mb-3">Reviews</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-white">
-            What Customers <span className="gold-text">Say</span>
+            What Customers <span className="green-text">Say</span>
           </h2>
         </div>
 

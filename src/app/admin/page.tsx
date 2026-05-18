@@ -17,14 +17,12 @@ const STATUS_COLORS: Record<BookingStatus, string> = {
 
 function RescheduleModal({
   booking,
-  secret,
   onClose,
   onSaved,
 }: {
-  booking:  Booking;
-  secret:   string;
-  onClose:  () => void;
-  onSaved:  () => void;
+  booking: Booking;
+  onClose: () => void;
+  onSaved: () => void;
 }) {
   const [date,    setDate]    = useState(booking.date.substring(0, 10));
   const [time,    setTime]    = useState(booking.time.substring(0, 5));
@@ -49,7 +47,7 @@ function RescheduleModal({
     try {
       const res  = await fetch(`/api/availability?date=${selectedDate}&service=${booking.service_id}`);
       const json = await res.json();
-      // Also include the current booked time so it shows as selectable
+      // Keep the current booked time selectable even if it's now "taken"
       const currentTime = booking.time.substring(0, 5);
       const merged = Array.from(new Set([...(json.slots ?? []), currentTime])).sort();
       setSlots(merged);
@@ -68,9 +66,10 @@ function RescheduleModal({
     setSaving(true);
     setError('');
     try {
+      // No Authorization header — session cookie is sent automatically
       const res  = await fetch(`/api/bookings/${booking.id}`, {
         method:  'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${secret}` },
+        headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ date, time }),
       });
       const json = await res.json();
@@ -85,33 +84,42 @@ function RescheduleModal({
   };
 
   return (
-    // Backdrop
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.7)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
-      role="presentation"
-      aria-hidden="true"
     >
-      <div className="card-dark w-full max-w-lg p-6 relative" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+      <div
+        className="card-dark w-full max-w-lg p-6 relative"
+        role="dialog"
+        aria-labelledby="modal-title"
+        aria-modal="true"
+      >
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h2 id="modal-title" className="font-display text-xl text-white font-bold">Reschedule Appointment</h2>
+            <h2 id="modal-title" className="font-display text-xl text-white font-bold">
+              Reschedule Appointment
+            </h2>
             <p className="text-white/40 text-sm mt-0.5">
               {booking.customer_name} — {booking.service_name}
             </p>
           </div>
-          <button onClick={onClose} className="text-white/30 hover:text-white transition-colors p-1">
+          <button
+            onClick={onClose}
+            className="text-white/30 hover:text-white transition-colors p-1"
+            aria-label="Close"
+          >
             <X size={20} />
           </button>
         </div>
 
-        {/* Current time */}
+        {/* Current appointment */}
         <div className="bg-white/5 rounded-lg px-4 py-3 mb-5 text-sm">
           <p className="text-white/40 text-xs mb-1">Current appointment</p>
           <p className="text-white font-medium">
-            {format(parseISO(booking.date.substring(0, 10)), 'EEEE, MMMM d, yyyy')} at {formatTimeDisplay(booking.time.substring(0, 5))}
+            {format(parseISO(booking.date.substring(0, 10)), 'EEEE, MMMM d, yyyy')} at{' '}
+            {formatTimeDisplay(booking.time.substring(0, 5))}
           </p>
         </div>
 
@@ -183,9 +191,7 @@ function RescheduleModal({
           </div>
         )}
 
-        {error && (
-          <p className="text-red-400 text-sm mb-4">{error}</p>
-        )}
+        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
         {/* Actions */}
         <div className="flex gap-3 pt-2">
@@ -199,10 +205,7 @@ function RescheduleModal({
           >
             {saving ? <><Loader2 size={14} className="animate-spin" /> Saving…</> : 'Confirm Reschedule'}
           </button>
-          <button
-            onClick={onClose}
-            className="btn-outline py-3 px-5 text-sm"
-          >
+          <button onClick={onClose} className="btn-outline py-3 px-5 text-sm">
             Cancel
           </button>
         </div>
@@ -214,24 +217,44 @@ function RescheduleModal({
 // ─── Main admin page ──────────────────────────────────────────────────────────
 
 export default function AdminPage() {
-  const [bookings,    setBookings]    = useState<Booking[]>([]);
-  const [loading,     setLoading]     = useState(true);
-  const [filter,      setFilter]      = useState<'all' | BookingStatus>('all');
-  const [secret,      setSecret]      = useState('');
-  const [authed,      setAuthed]      = useState(false);
-  const [error,       setError]       = useState('');
+  const [bookings,     setBookings]     = useState<Booking[]>([]);
+  const [loading,      setLoading]      = useState(false);
+  const [filter,       setFilter]       = useState<'all' | BookingStatus>('all');
+  const [authed,       setAuthed]       = useState(false);
+  const [password,     setPassword]     = useState(''); // cleared immediately after login
+  const [error,        setError]        = useState('');
   const [rescheduling, setRescheduling] = useState<Booking | null>(null);
 
+  // Fetches bookings — does NOT manage loading state so callers can compose it.
   const fetchBookings = async () => {
-    setLoading(true);
     try {
-      const res  = await fetch('/api/bookings', {
-        headers: { Authorization: `Bearer ${secret}` },
-      });
+      // Cookie is sent automatically; no Authorization header needed.
+      const res  = await fetch('/api/bookings');
       const json = await res.json();
       if (!json.success) throw new Error(json.error);
       setBookings(json.data);
+    } catch (e: any) {
+      setError(e.message);
+      if (e.message === 'Unauthorized') setAuthed(false);
+    }
+  };
+
+  // Exchanges the password for a session cookie, then loads bookings.
+  // A single loading flag covers both steps so the spinner never flickers off mid-fetch.
+  const login = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res  = await fetch('/api/admin/auth', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ secret: password }),
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error);
+      setPassword(''); // clear from memory as soon as the cookie is set
       setAuthed(true);
+      await fetchBookings(); // awaited so finally runs after data arrives
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -239,16 +262,26 @@ export default function AdminPage() {
     }
   };
 
+  // Used by the Refresh button — owns its own loading bookend.
+  const handleRefresh = async () => {
+    setLoading(true);
+    await fetchBookings();
+    setLoading(false);
+  };
+
   const updateStatus = async (id: string, status: BookingStatus) => {
+    // Cookie sent automatically; no Authorization header needed.
     await fetch(`/api/bookings/${id}`, {
       method:  'PATCH',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${secret}` },
+      headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ status }),
     });
-    fetchBookings();
+    await handleRefresh();
   };
 
   const filtered = filter === 'all' ? bookings : bookings.filter(b => b.status === filter);
+
+  // ── Login screen ──────────────────────────────────────────────────────────
 
   if (!authed) {
     return (
@@ -258,13 +291,13 @@ export default function AdminPage() {
           <input
             type="password"
             className="input-dark mb-4"
-            placeholder="Admin secret"
-            value={secret}
-            onChange={e => setSecret(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && fetchBookings()}
+            placeholder="Admin password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && login()}
           />
           {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
-          <button onClick={fetchBookings} className="btn-primary w-full justify-center">
+          <button onClick={login} disabled={loading} className="btn-primary w-full justify-center">
             {loading ? <Loader2 size={16} className="animate-spin" /> : 'Access Dashboard'}
           </button>
         </div>
@@ -272,15 +305,15 @@ export default function AdminPage() {
     );
   }
 
+  // ── Dashboard ─────────────────────────────────────────────────────────────
+
   return (
     <>
-      {/* Reschedule modal */}
       {rescheduling && (
         <RescheduleModal
           booking={rescheduling}
-          secret={secret}
           onClose={() => setRescheduling(null)}
-          onSaved={fetchBookings}
+          onSaved={handleRefresh}
         />
       )}
 
@@ -291,7 +324,13 @@ export default function AdminPage() {
               <h1 className="font-display text-3xl text-white">Bookings Dashboard</h1>
               <p className="text-white/40 text-sm mt-1">{bookings.length} total bookings</p>
             </div>
-            <button onClick={fetchBookings} className="btn-outline text-sm py-2 px-4">Refresh</button>
+            <button
+              onClick={handleRefresh}
+              disabled={loading}
+              className="btn-outline text-sm py-2 px-4"
+            >
+              {loading ? <Loader2 size={14} className="animate-spin" /> : 'Refresh'}
+            </button>
           </div>
 
           {/* Filter tabs */}
@@ -317,6 +356,7 @@ export default function AdminPage() {
             ))}
           </div>
 
+          {/* Booking list */}
           {loading ? (
             <div className="flex items-center gap-2 text-white/30 py-12 justify-center">
               <Loader2 size={20} className="animate-spin" />
@@ -340,7 +380,8 @@ export default function AdminPage() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
                         <span className="flex items-center gap-2 text-white/50">
                           <Calendar size={13} className="text-brand-400" />
-                          {format(parseISO(b.date.substring(0, 10)), 'EEEE, MMM d, yyyy')} at {formatTimeDisplay(b.time.substring(0, 5))}
+                          {format(parseISO(b.date.substring(0, 10)), 'EEEE, MMM d, yyyy')} at{' '}
+                          {formatTimeDisplay(b.time.substring(0, 5))}
                         </span>
                         <span className="flex items-center gap-2 text-white/50">
                           <User size={13} className="text-brand-400" />

@@ -37,7 +37,7 @@ export default function ContactPage() {
         <div className="text-center mb-16">
           <p className="text-brand-400 text-sm font-semibold uppercase tracking-widest mb-3">Contact</p>
           <h1 className="font-display text-5xl font-bold text-white mb-4">
-            Get in <span className="gold-text">Touch</span>
+            Get in <span className="green-text">Touch</span>
           </h1>
           <p className="text-white/50 max-w-md mx-auto">
             Questions about a service? Ready to book? We typically respond within a few hours.

@@ -26,7 +26,7 @@ export default function ServicesPage() {
         <p className="text-brand-400 text-sm font-semibold uppercase tracking-widest mb-3">Services & Pricing</p>
         <h1 className="font-display text-5xl md:text-6xl font-bold text-white mb-5">
           Transparent Pricing.<br />
-          <span className="gold-text">Exceptional Results.</span>
+          <span className="green-text">Exceptional Results.</span>
         </h1>
         <p className="text-white/50 text-lg max-w-xl mx-auto">
           No estimates, no surprises. Choose from our menu of professional detailing services — all performed by certified technicians.
@@ -56,7 +56,7 @@ export default function ServicesPage() {
 
               {/* Price + duration */}
               <div className="flex items-end gap-3 mb-6">
-                <span className="font-display text-3xl font-bold gold-text">{service.priceLabel}</span>
+                <span className="font-display text-3xl font-bold green-text">{service.priceLabel}</span>
                 <span className="text-white/30 text-sm mb-1 flex items-center gap-1">
                   <Clock size={12} /> ~{Math.round(service.duration / 60)}h
                 </span>
@@ -109,7 +109,7 @@ export default function ServicesPage() {
               )}
               <div className="flex items-start justify-between mb-4">
                 <span className="text-4xl">{service.icon}</span>
-                <span className="font-display text-3xl font-bold gold-text">{service.priceLabel}</span>
+                <span className="font-display text-3xl font-bold green-text">{service.priceLabel}</span>
               </div>
               <h3 className="font-display text-xl font-bold text-white mb-2">{service.name}</h3>
               <p className="text-white/50 text-sm leading-relaxed mb-4">{service.description}</p>

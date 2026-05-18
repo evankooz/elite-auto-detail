@@ -24,7 +24,7 @@ export default function AboutPage() {
           <p className="text-brand-400 text-sm font-semibold uppercase tracking-widest mb-4">Our Story</p>
           <h1 className="font-display text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
             Passion for Clean.<br />
-            <span className="gold-text">Built on Trust.</span>
+            <span className="green-text">Built on Trust.</span>
           </h1>
           <p className="text-white/60 text-lg leading-relaxed mb-5">
             {clientConfig.businessName} was founded with a simple belief: every vehicle and home deserves to look its absolute best — and getting there shouldn't be complicated or expensive.
@@ -38,7 +38,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-20">
           {clientConfig.stats.map(({ value, label }) => (
             <div key={label} className="card-dark p-6 text-center">
-              <div className="font-display text-3xl font-bold gold-text mb-1">{value}</div>
+              <div className="font-display text-3xl font-bold green-text mb-1">{value}</div>
               <div className="text-white/50 text-sm">{label}</div>
             </div>
           ))}

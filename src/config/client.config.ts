@@ -14,7 +14,7 @@
 
 export const clientConfig = {
   // ── Business identity ────────────────────────────────────────
-  businessName: 'Elite Auto & Home Detail',
+  businessName: 'Elite Auto & Home Detailing',
   tagline:      'Showroom Finish. Every Time.',
   description:  'Premium mobile auto and home detailing in [Your City]. We come to you — no travel required.',
   phone:        '(555) 123-4567',
@@ -25,7 +25,7 @@ export const clientConfig = {
 
   // ── SEO ──────────────────────────────────────────────────────
   seo: {
-    title:        'Elite Auto & Home Detail | Premium Detailing Services',
+    title:        'Elite Auto & Home Detailing | Premium Detailing Services',
     description:  'Professional mobile auto and home detailing. Book online in minutes. Serving [Your City] and surrounding areas.',
     keywords:     'auto detailing, car detailing, home detailing, mobile detailing, [Your City]',
     ogImage:      '/og-image.jpg',
@@ -176,7 +176,7 @@ export const clientConfig = {
     ownerEmail: process.env.OWNER_EMAIL ?? '',
     fromPhone:  process.env.TWILIO_PHONE_NUMBER ?? '',
     fromEmail:  'onboarding@resend.dev',
-    fromName:   'Elite Auto & Home Detail',
+    fromName:   'Elite Auto & Home Detailing',
   },
 } as const;
 

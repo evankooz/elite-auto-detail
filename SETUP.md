@@ -143,7 +143,7 @@ In `src/config/client.config.ts`:
 ```ts
 notifications: {
   fromEmail: 'bookings@eliteautoandhomedetail.com',
-  fromName:  'Elite Auto & Home Detail',
+  fromName:  'Elite Auto & Home Detailing',
 }
 ```
 
@@ -252,7 +252,7 @@ hours: {
 #### File 2: `src/app/globals.css` — brand colors
 ```css
 :root {
-  --brand-400: #2563eb; /* This client uses blue instead of gold */
+  --brand-400: #2E8B57;
   --font-display: 'Cormorant Garamond'; /* Different display font */
 }
 ```

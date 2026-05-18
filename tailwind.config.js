@@ -20,9 +20,9 @@ module.exports = {
           800: 'var(--brand-800)',
           900: 'var(--brand-900)',
         },
-        gold: {
-          400: '#D4AF37',
-          500: '#C49A2B',
+        green: {
+          400: '#2E8B57',
+          500: '#236B43',
         },
         dark: {
           900: '#0A0A0B',

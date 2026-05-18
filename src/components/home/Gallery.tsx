@@ -15,7 +15,7 @@ export default function Gallery() {
         <div className="text-center mb-14">
           <p className="text-brand-400 text-sm font-semibold uppercase tracking-widest mb-3">Our Work</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-white">
-            See the <span className="gold-text">Difference</span>
+            See the <span className="green-text">Difference</span>
           </h2>
           <p className="text-white/50 mt-4 max-w-xl mx-auto">
             Real results from real customers. Swipe to see before and after.

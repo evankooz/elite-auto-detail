@@ -11,7 +11,7 @@ export default function Services() {
         <div className="text-center mb-16">
           <p className="text-brand-400 text-sm font-semibold uppercase tracking-widest mb-3">Our Services</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
-            Every Detail. <span className="gold-text">Perfected.</span>
+            Every Detail. <span className="green-text">Perfected.</span>
           </h2>
           <p className="text-white/50 max-w-xl mx-auto text-lg">
             From quick refreshes to complete transformations — choose the service that fits your needs.

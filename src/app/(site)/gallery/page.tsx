@@ -28,7 +28,7 @@ export default function GalleryPage() {
         <div className="text-center mb-16">
           <p className="text-brand-400 text-sm font-semibold uppercase tracking-widest mb-3">Portfolio</p>
           <h1 className="font-display text-5xl font-bold text-white mb-4">
-            Before & <span className="gold-text">After</span>
+            Before & <span className="green-text">After</span>
           </h1>
           <p className="text-white/50 max-w-md mx-auto">
             Real results from real customers. Hover over any photo to see the transformation.

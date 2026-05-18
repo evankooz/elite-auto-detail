@@ -14,7 +14,7 @@ export default function HowItWorks() {
         <div className="text-center mb-14">
           <p className="text-brand-400 text-sm font-semibold uppercase tracking-widest mb-3">The Process</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-white">
-            Booking Takes <span className="gold-text">60 Seconds</span>
+            Booking Takes <span className="green-text">60 Seconds</span>
           </h2>
         </div>
 
@@ -27,7 +27,7 @@ export default function HowItWorks() {
               )}
               <div className="relative z-10">
                 <div className="w-16 h-16 rounded-2xl bg-brand-400/10 border border-brand-400/20 flex items-center justify-center mb-5">
-                  <span className="font-display text-xl font-bold gold-text">{step.n}</span>
+                  <span className="font-display text-xl font-bold green-text">{step.n}</span>
                 </div>
                 <h3 className="font-semibold text-white text-lg mb-2">{step.title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{step.desc}</p>

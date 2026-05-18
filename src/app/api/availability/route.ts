@@ -39,10 +39,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // Get existing bookings for this date
   const db = supabaseAdmin();
   const { data: bookings } = await db
-    .from('bookings')
-    .select('time, duration')
-    .eq('date', dateStr)
-    .in('status', ['pending', 'confirmed']);
+  .from('booking_slots')
+  .select('time, duration')
+  .eq('date', dateStr);
 
   const bookedTimes = (bookings ?? []).map(b => b.time as string);
 
